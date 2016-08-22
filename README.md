@@ -1,2 +1,2 @@
 # algorithms
-This is a accumulation of algorithm lectures.
+This is an accumulation of algorithm lectures.
