@@ -9,7 +9,8 @@ In Binary Search Tree, `Inorder Successor` of an input node can also be defined 
 Go to right subtree and return the node with minimum key value in right subtree.
 2. If right sbtree of node is NULL, then succ is one of the ancestors. Do following.
 Travel up using the parent pointer until you see a node which is left child of it’s parent. The parent of such a node is the succ.
-~implmentation:~
+
+- ruby implementation
 ```ruby
 module BST
   Node = Struct.new(:value, :parent, :left, :right)
