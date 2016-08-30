@@ -4,7 +4,7 @@ In Binary Search Tree, `Inorder Successor` of an input node can also be defined 
 
 ![BST](http://www.geeksforgeeks.org/wp-content/uploads/2009/09/BST_LCA.gif)
 
-##### Algorithm:
+##### Method 1:
 1. If right subtree of node is not NULL, then succ lies in right subtree. Do following.
 Go to right subtree and return the node with minimum key value in right subtree.
 2. If right sbtree of node is NULL, then succ is one of the ancestors. Do following.
