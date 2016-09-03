@@ -41,9 +41,9 @@ def convert s, k, n, index, result=[]
     median = (n/2).round
     if k == 0 
         result.push(s) if is_palindrome?(s, index) # add to result array if the remaining satisfies rule of palindrome
-    elsif index > median - 1
+    elsif (index) >= (n-index-1)
         result.push(s)
-        if k == 1 && (median * 2 + 1 ) == n
+        if k == 1 && (n-index-1) == index
             array = s.chars.to_a
             array[index] = 9
             result.push(array.join(''))
