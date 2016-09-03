@@ -43,9 +43,9 @@ def convert s, k, n, index, result=[]
         result.push(s) if is_palindrome?(s, index) # add to result array if the remaining satisfies rule of palindrome
     elsif (index) >= (n-index-1)
         result.push(s)
-        if k == 1 && (n-index-1) == index
+        if k > 0 && (n-index-1) == index
             array = s.chars.to_a
-            array[index] = 9
+            array[index] = '9'
             result.push(array.join(''))
         end
 
