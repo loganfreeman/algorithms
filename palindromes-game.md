@@ -85,3 +85,72 @@ end
 
 
 ```
+
+
+non recursive version
+```ruby
+#!/bin/ruby
+
+n,k = gets.strip.split(' ')
+
+n = n.to_i
+k = k.to_i
+number = gets.strip
+
+result = []
+
+def is_palindrome? s, index 
+    median = (s.length/2).round
+    is_palindrome = true
+    length = s.length
+    while index <= (length-index-1)
+        if (s[index] != s[length-index-1])
+            is_palindrome = false
+            break
+        end
+        index += 1
+    end
+    is_palindrome
+end
+
+def mutation_needed s
+    median = (s.length/2).round
+    length = s.length
+    mutations = 0
+    index = 0
+    while index <= (length-index-1)
+        if (s[index] != s[length-index-1])
+            mutations += 1
+        end
+        index += 1
+    end
+    mutations
+end
+
+
+mutations = mutation_needed number
+median = (n/2).round
+if mutations > k
+    puts -1
+else
+    array = number.chars.to_a.map(&:to_i)
+    index = 0
+    while k > mutations && (index <= (n-index-1))
+        array[index] = array[n-index-1] = '9'
+        k -= 1
+        index += 1
+    end
+    while mutations > 0 && (index <= (n-index-1))
+        if array[index] == array[n-index-1]
+            index += 1
+            next
+        end
+        array[index] = array[n-index-1] = [array[index], array[n-index-1]].max
+        mutations -= 1
+        index += 1
+        
+    end
+    
+    puts array.join('')
+end
+```
