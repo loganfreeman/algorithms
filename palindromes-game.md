@@ -135,11 +135,15 @@ if mutations > k
 else
     array = number.chars.to_a.map(&:to_i)
     index = 0
-    while k > mutations && (index <= (n-index-1))
-        array[index] = array[n-index-1] = '9'
-        k -= 1
+    while k > mutations && (index <= (n-index-1))        
+        k -= 1 unless array[index] == 9
+        k -= 1 unless array[n-index-1] == 9
+        array[index] = array[n-index-1] = 9
         index += 1
+        mutations = mutation_needed array.join('')
     end
+    
+
     while mutations > 0 && (index <= (n-index-1))
         if array[index] == array[n-index-1]
             index += 1
@@ -148,9 +152,9 @@ else
         array[index] = array[n-index-1] = [array[index], array[n-index-1]].max
         mutations -= 1
         index += 1
-        
+
     end
-    
+
     puts array.join('')
 end
 ```
