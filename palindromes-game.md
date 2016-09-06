@@ -92,69 +92,87 @@ non recursive version
 #!/bin/ruby
 
 n,k = gets.strip.split(' ')
-
 n = n.to_i
 k = k.to_i
 number = gets.strip
-
-result = []
-
-def is_palindrome? s, index 
-    median = (s.length/2).round
-    is_palindrome = true
-    length = s.length
-    while index <= (length-index-1)
-        if (s[index] != s[length-index-1])
-            is_palindrome = false
-            break
-        end
-        index += 1
-    end
-    is_palindrome
-end
-
-def mutation_needed s
-    median = (s.length/2).round
-    length = s.length
-    mutations = 0
-    index = 0
-    while index <= (length-index-1)
-        if (s[index] != s[length-index-1])
-            mutations += 1
-        end
-        index += 1
-    end
-    mutations
-end
-
-
-mutations = mutation_needed number
 median = (n/2).round
-if mutations > k
-    puts -1
-else
+def get_mismatches number
     array = number.chars.to_a.map(&:to_i)
+    n = number.length
+    mismatches = Array.new
     index = 0
-    while k > mutations && (index <= (n-index-1))        
-        k -= 1 unless array[index] == 9
-        k -= 1 unless array[n-index-1] == 9
-        array[index] = array[n-index-1] = 9
-        index += 1
-        mutations = mutation_needed array.join('')
-    end
-    
-
-    while mutations > 0 && (index <= (n-index-1))
-        if array[index] == array[n-index-1]
-            index += 1
-            next
+    while index <= (n-index-1)
+        if array[index] != array[n-index-1]
+            mismatches.push(index)
         end
-        array[index] = array[n-index-1] = [array[index], array[n-index-1]].max
-        mutations -= 1
         index += 1
-
     end
+    mismatches
+end
 
+def traverse number
+    array = number.chars.to_a.map(&:to_i)
+    n = number.length
+    index = 0
+    while index <= (n-index-1)
+        if array[index] != array[n-index-1]
+            yield array, n, index
+        end
+        index += 1
+    end
+    array.join('')
+end
+
+def fix_palindrome number
+    traverse number do |array, n, index|
+        array[index] = array[n-index-1] = [array[index], array[n-index-1]].max
+    end 
+end
+
+mismatches = get_mismatches number
+if mismatches.length > k
+    puts -1
+    exit
+end
+
+
+
+
+if mismatches.length == k
+    puts fix_palindrome number
+end
+
+if mismatches.length < k
+    array = number.chars.to_a.map(&:to_i)
+    n = number.length
+    index = 0
+    while index <= (n-index-1)
+        already_match = array[index] == array[n-index-1]
+        if already_match && k >= mismatches.length + 2 && array[index] != 9 && index != (n-index-1)
+            array[index] = array[n-index-1] = 9
+            k -= 2
+        end
+        if already_match && k > mismatches.length && index == (n-index-1)
+            array[index] = array[n-index-1] = 9
+        end
+        
+        if !already_match 
+            if k > mismatches.length
+                mismatches = mismatches - [index]
+                m = 0
+                m += 1 if array[index] != 9
+                m += 1 if array[n-index-1] != 9
+                k = k - m
+                array[index] = array[n-index-1] = 9
+            else
+                mismatches = mismatches - [index]
+                k -= 1
+                array[index] = array[n-index-1] = [array[index], array[n-index-1]].max
+            end
+        end
+        index += 1
+    end
     puts array.join('')
+    
 end
 ```
