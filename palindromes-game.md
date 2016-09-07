@@ -91,6 +91,8 @@ non recursive version
 ```ruby
 #!/bin/ruby
 
+require 'set'
+
 n,k = gets.strip.split(' ')
 n = n.to_i
 k = k.to_i
@@ -155,17 +157,17 @@ if mismatches.length < k
         if already_match && k > mismatches.length && index == (n-index-1)
             array[index] = array[n-index-1] = 9
         end
-        
+
         if !already_match 
             if k > mismatches.length
-                mismatches = mismatches - [index]
+                mismatches.shift
                 m = 0
                 m += 1 if array[index] != 9
                 m += 1 if array[n-index-1] != 9
                 k = k - m
                 array[index] = array[n-index-1] = 9
             else
-                mismatches = mismatches - [index]
+                mismatches.shift
                 k -= 1
                 array[index] = array[n-index-1] = [array[index], array[n-index-1]].max
             end
@@ -173,6 +175,6 @@ if mismatches.length < k
         index += 1
     end
     puts array.join('')
-    
+
 end
 ```
