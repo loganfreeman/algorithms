@@ -41,6 +41,7 @@ class Node
 
     def initialize(name)
         @name = name
+        @types = []
     end
 
     def adjacents
@@ -73,4 +74,24 @@ class UnionFind
             @unions[node] = node1_id if id == node2_id
         end
     end
+end
+
+N, M, K = gets.strip.split(' ').map(&:to_i)
+i = 1
+graph = Graph.new
+while i <= N
+    node = Node.new(i)
+    array = gets.strip.split(' ')
+    types = array.shift.to_i
+    while !array.empty?
+        node.types.push(array.shift)
+    end
+    graph.add_node(node)
+    i += 1
+end
+i = 1
+while i <= M
+    from, to, weight = gets.strip.split(' ').map(&:to_i)
+    graph.add_edge(from, to, weight)
+    i += 1
 end
