@@ -38,7 +38,6 @@ class Graph
             q.delete(u)
             u.neighbours.each do |v|
                 vv = @vertices[v]
-                next unless q.include?(vv)
                 alt = u.dist + @edges[[u.name, v]]
                 if alt < vv.dist
                     vv.dist = alt
