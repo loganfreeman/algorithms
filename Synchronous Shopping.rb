@@ -14,7 +14,7 @@ class Edge
     end
 
     def to_s
-        "#{node1} <=> #{node2} with weight #{weight}"
+        "#{node1.to_s} <=> #{node2.to_s} with weight #{weight}"
     end
 end
 
