@@ -1,4 +1,5 @@
 # Enter your code here. Read input from STDIN. Print output to STDOUT
+require 'pp'
 class Edge
     attr_accessor :node1, :node2, :weight
 
@@ -76,7 +77,6 @@ class UnionFind
     end
 end
 
-
 class Kruskal
   def compute_mst(graph)
     mst = []
@@ -99,6 +99,7 @@ end
 N, M, K = gets.strip.split(' ').map(&:to_i)
 i = 1
 graph = Graph.new
+hash = Hash.new
 while i <= N
     node = Node.new(i)
     array = gets.strip.split(' ')
@@ -107,11 +108,14 @@ while i <= N
         node.types.push(array.shift)
     end
     graph.add_node(node)
+    hash[i] = node
     i += 1
 end
 i = 1
 while i <= M
     from, to, weight = gets.strip.split(' ').map(&:to_i)
-    graph.add_edge(from, to, weight)
+    graph.add_edge(hash[from], hash[to], weight)
     i += 1
 end
+
+pp Kruskal.new.compute_mst(graph).map(&:to_s)
