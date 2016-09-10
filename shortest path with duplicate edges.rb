@@ -133,20 +133,14 @@ end
 graphs = []
 def dijkstra_read_graph(n_nodes, n_edges)
     graph = []
-    set = Set.new (1..n_nodes).to_a
     while n_edges > 0
         line = gets.gsub(/\s+/m, ' ').strip.split(' ')
         graph.push([line[0], line[1], line[2].to_i])
-        set.delete(line[0].to_i)
-        set.delete(line[1].to_i)
         n_edges -= 1
     end
     source = gets.strip
     g = Graph.new(graph)
-    set.each do |vertex|
-        g.add_vertex(vertex.to_s)
-    end
-
+    
     g.dijkstra(source)
     distances = []
     (1..n_nodes).each do |i|
