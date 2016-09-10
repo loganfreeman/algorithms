@@ -100,6 +100,8 @@ class Graph
         q = @vertices.values
 
         @vertices[source].dist = 0
+        
+        visited = Set.new
         until q.empty?
             min_index = find_min(q)
             u = q[min_index]
@@ -107,12 +109,14 @@ class Graph
             q.delete_at(min_index)
             u.neighbours.each do |v|
                 vv = @vertices[v]
+                next if visited.include?(vv.name)
                 alt = u.dist + @edges[[u.name, v]]
                 if alt < vv.dist
                     vv.dist = alt
                     vv.prev = u.name
                 end
             end
+            visited.add(u.name)
         end
         @dijkstra_source = source
     end
@@ -188,11 +192,7 @@ def read_graph
         info = gets.gsub(/\s+/m, ' ').strip.split(' ')
         n_edges = info[1].to_i
         n_nodes = info[0].to_i
-        if (n_edges * n_nodes**2) > n_nodes**3
-            floyd_read_graph(n_nodes, n_edges)
-        else
-            dijkstra_read_graph(n_nodes, n_edges)
-        end
+        dijkstra_read_graph(n_nodes, n_edges)
     end
 end
 
