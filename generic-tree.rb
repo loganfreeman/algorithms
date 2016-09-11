@@ -118,14 +118,14 @@ class Tree
 
     def each(&block)
     end
-
+    
     def traverse
         list = []
         yield @value
         @children.each do |child|
             list.push(child)
         end
-
+        
         loop do
             break if list.empty?
             node = list.shift
@@ -134,9 +134,25 @@ class Tree
                 list.push(child)
             end
         end
-  end
+    end
+    
+    def depth_first_traveral(&block)
+        yield @value
+        @children.each do |child|
+            child.depth_first_traveral(&block)
+        end
+    end
+    
+    
+    def inOrder(&block)
+    end
+    
+    def preOrder(&block)
+    end
+    
+    def postOrder(&block)
+    end
 end
-
 N, M = gets.strip.split(' ').map(&:to_i)
 i = 1
 hash = {}
@@ -152,4 +168,11 @@ while i <= M
     child = hash[to]
     parent.add_child(child)
     i += 1
+end
+hash[1].traverse do |node|
+    puts node
+end
+puts "#########"
+hash[1].depth_first_traveral do |node|
+    puts node
 end
