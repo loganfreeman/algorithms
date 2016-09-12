@@ -11,6 +11,20 @@ def max_subarray_all(numbers)
     max
 end
 
+def max_subarray(numbers)
+    len = numbers.length
+    i = 0
+    max_so_far = -Float::INFINITY
+    max_ending_here = -Float::INFINITY
+    while i < len
+        current = numbers[i]
+        max_ending_here = [max_ending_here, max_ending_here + current, current].max 
+        max_so_far = [max_so_far, max_ending_here].max
+        i += 1
+    end
+    max_so_far
+end
+
 
 def sub_arr(numbers)
     i = 0
@@ -45,7 +59,7 @@ def solve
     n = gets.strip.to_i
     numbers = gets.gsub(/\s+/m, ' ').strip.split(" ").map(&:to_i)
     x = max_subarray_cont(numbers)
-    y = max_subarray_all(numbers)
+    y = max_subarray(numbers)
 
     puts "#{x} #{y}"
 end
@@ -53,6 +67,6 @@ end
 cases = gets.strip.to_i
 
 while cases > 0
-    solve
+    solve 
     cases -= 1
 end
