@@ -74,7 +74,6 @@ class PriorityQueue
   end
 end
 
-require_relative "priority_queue"
 
 class Dijkstra
   def initialize(graph, source_node)
