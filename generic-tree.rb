@@ -151,6 +151,10 @@ class Tree
     end
     
     def postOrder(&block)
+        @children.each do |child|
+            child.postOrder(&block)
+        end
+        yield @value
     end
 end
 N, M = gets.strip.split(' ').map(&:to_i)
