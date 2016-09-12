@@ -105,9 +105,11 @@ end
 # is also a Tree and can have any number of children.
 class Tree
     attr_reader :value, :children
+    attr_accessor :childCount
     def initialize(value)
         @value = value
         @children = LinkedList.new
+        @childCount = 0
     end
 
     # Add a new child to this node
@@ -116,10 +118,24 @@ class Tree
         @children.unshift(Tree(value))
     end
 
-    def each(&block)
+    def traverse
+        list = []
+        yield self
+        @children.each do |child|
+            list.push(child)
+        end
+        
+        loop do
+            break if list.empty?
+            node = list.shift
+            yield node
+            node.children.each do |child|
+                list.push(child)
+            end
+        end
     end
     
-    def traverse
+    def each
         list = []
         yield @value
         @children.each do |child|
@@ -156,6 +172,15 @@ class Tree
         end
         yield @value
     end
+    
+    def getChildCount
+        counts = []
+        @children.each do |child|
+            counts.push(child.getChildCount)
+        end
+        @childCount = 1 + counts.reduce(0, :+)
+        @childCount
+    end
 end
 N, M = gets.strip.split(' ').map(&:to_i)
 i = 1
@@ -173,10 +198,20 @@ while i <= M
     parent.add_child(child)
     i += 1
 end
-hash[1].traverse do |node|
+puts "#### traverse each #####"
+hash[1].each do |node|
     puts node
 end
-puts "#########"
+puts "#### depth first traveral #####"
 hash[1].depth_first_traveral do |node|
     puts node
+end
+puts "### post order traversal ####"
+hash[1].postOrder do |node|
+    puts node
+end
+hash[1].getChildCount
+puts "### child count display ####"
+hash[1].traverse do |node|
+    puts "#{node.value} hash #{node.childCount}"
 end
