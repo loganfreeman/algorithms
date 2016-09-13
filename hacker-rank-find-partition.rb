@@ -1,4 +1,11 @@
 module HackerRank
+  
+  # Yield all subsets of the array to the block.
+  def self.subsets(array, skip = 0, &block)
+    yield(array)
+    (array.length-1).downto(skip){|i| subsets(array[0...i] + array[i+1..-1], i, &block)}
+  end
+  
   def self.track(array, p, i, j, set = [])
 
 
