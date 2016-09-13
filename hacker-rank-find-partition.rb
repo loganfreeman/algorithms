@@ -1,5 +1,11 @@
 module HackerRank
   
+  
+  # Return the sum of the values.
+  def self.sum(values)
+    values.inject(0){|x,y| x+=y}
+  end
+  
   # Return first subset of values that sum to want, using the meet in the
   # middle algorithm (O(n * 2^(n/2)).
   def self.subset_sum(values, want, max_seconds=nil)
