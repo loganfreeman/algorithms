@@ -54,7 +54,7 @@ def comp_set(array, subset)
     comp
 end
 
-def solve(m, array)
+def solve_brute_force(m, array)
     max = 0
     find_subset(array).each do |subset|
         s = 1
@@ -71,12 +71,15 @@ def solve(m, array)
     puts max
 end
 def solve_smart(m, array)
-    array = array.sort 
+    array = array.sort
     max = 0
     len = array.length
+    pre_total = 0
     (1..len).each do |i|
-        s = 1 + i
-        p = array[i..-1].reduce(0, :+)*s
+        index = len - i
+        s = 1 + len - i
+        pre_total += array[index]
+        p = pre_total * s
         max = [p, max].max
     end
     puts max
