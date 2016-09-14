@@ -160,8 +160,19 @@ def process
     n = gets.strip.to_i
     array = gets.strip.split(' ').map(&:to_i)
     total = array.reduce(:+)
-    result = max_partition_efficient(array)
-    pp result
+    if total.odd?
+        pp 0
+    else
+        pre = can_subset_sum(array, total /= 2)
+        count = 0
+        while pre[total]
+            count += 1
+            break if total.odd?
+            total /= 2
+        end
+        pp count
+    end
+    
 end
 while n > 0
     process
