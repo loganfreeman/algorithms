@@ -1,4 +1,5 @@
 # Enter your code here. Read input from STDIN. Print output to STDOUT
+require 'pp'
 n = gets.strip.to_i
 
 def display_table(table)
@@ -26,18 +27,19 @@ def track(array, p, i, j, set = [])
     end
     set
 end
+
 def find_partition_efficient(array)
     n = array.length
     if n <= 1
-        return [false, nil]
+        return false
     end
     k = array.reduce(:+)
     if k % 2 == 1
-        return [false, nil]
+        return false
     end
     rows = k/2 + 1
     pre = Array.new(rows)
-    subset = []
+    set = []
     (1..rows).each { |i| pre[i-1] = false }
     pre[0] = true
     (1..n).each do |j|
@@ -46,32 +48,17 @@ def find_partition_efficient(array)
             current[i] = pre[i]
             if i - array[j-1] >= 0
                 current[i] = pre[i] || pre[i - array[j-1]]
-                subset.push(j-1)
             end
         end
+        puts pre.map { |b| b ? 1 : 0 } .join(' ')
         pre = current
         
     end
-    can_partition = pre[(k/2)]
-    parts = []
-    if can_partition
-        left = []
-        right = []
-        parts.push(left)
-        parts.push(right)
-        array.each_with_index do |item, index|
-            if subset.include? index
-                left.push(item)
-            else
-                right.push(item)
-            end
-        end
-    end
-    parts.each do |p|
-        #puts p.join(' ')
-    end
-    [can_partition , parts]
+    puts pre.map { |b| b ? 1 : 0 } .join(' ')
+    pre[(k/2)]
+
 end
+
 def find_partition(array)
     n = array.length
     if n <= 1
@@ -110,6 +97,7 @@ def find_partition(array)
             end
         end
     end
+    display_table p
     [can_partition , parts]
 end
 
@@ -122,12 +110,54 @@ def max_partition(array)
     end
 end
 
+
+def can_subset_sum(array, sum)
+    rows = sum + 1
+    n = array.length
+    pre = Array.new(rows)
+    (1..rows).each { |i| pre[i-1] = false }
+    pre[0] = true
+    (1..n).each do |j|
+        current = Array.new(rows)
+        current[0] = true
+        (1..sum).each do |i|
+            current[i] = pre[i]
+            if i - array[j-1] >= 0
+                current[i] = pre[i] || pre[i - array[j-1]]
+            end
+        end
+        pre = current
+
+    end
+    pre[sum]
+end
+
+
+def max_partition_efficient(array)
+    array = array.reject { |i| i == 0 }
+    total = array.reduce(:+)
+    if total % 2 == 1
+        return 0
+    end
+    can = can_subset_sum(array, total = total / 2)
+    count = 0
+    while can
+        count += 1
+        if total % 2 == 0
+            can = can_subset_sum(array, total = total / 2)
+        else
+            can = false
+        end
+    end
+    count
+end
+
 def process
     n = gets.strip.to_i
     array = gets.strip.split(' ').map(&:to_i)
     total = array.reduce(:+)
-    result = max_partition(array)
-    puts result
+    result = max_partition_efficient(array)
+    pp result
 end
 while n > 0
     process
