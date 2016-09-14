@@ -1,6 +1,11 @@
 module Hacker
 
-
+  def self.median(array)
+    sorted = array.sort
+    len = sorted.length
+    (sorted[(len - 1) / 2] + sorted[len / 2]) / 2.0
+  end
+  
   # Return the sum of the values.
   def self.sum(values)
     values.inject(0){|x,y| x+=y}
