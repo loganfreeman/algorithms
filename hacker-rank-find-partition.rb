@@ -168,5 +168,23 @@ module Hacker
       pre[(k/2)]
 
   end
+  
+  def self.max_partition_efficient(array)
+    total = array.reduce(:+)
+    if total % 2 == 1
+      return 0
+    end
+    can = can_subset_sum(array, total = total / 2)
+    count = 0
+    while can
+      count += 1
+      if total % 2 == 0
+        can = can_subset_sum(array, total = total / 2)
+      else
+        can = false
+      end
+    end
+    count
+  end
 
 end
