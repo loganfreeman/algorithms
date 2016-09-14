@@ -50,6 +50,48 @@ module Hacker
     yield(array)
     (array.length-1).downto(skip){|i| subsets(array[0...i] + array[i+1..-1], i, &block)}
   end
+  
+  
+  def self.comp_set(array, subset)
+    n = subset.length
+    m = array.length
+    i = j = 0
+    comp = []
+    while j < m
+        if i < n
+            if subset[i] != array[j]
+                comp.push(array[j])
+                j += 1
+            else
+                i += 1
+                j += 1
+            end
+        else
+            comp.push(array[j])
+            j += 1
+        end
+    end
+    comp
+  end
+
+  def self.find_subset(input_array)
+    no_of_subsets = 2**input_array.length - 1
+    all_subsets = []
+    expected_length_of_binary_no = input_array.length
+    for i in 1..(no_of_subsets) do
+        binary_string = i.to_s(2)
+        binary_string = binary_string.rjust(expected_length_of_binary_no, '0')
+        binary_array = binary_string.split('')
+        subset = []
+        binary_array.each_with_index do |bin, index|
+            if bin.to_i == 1
+                subset.push(input_array[index])
+            end
+        end
+        all_subsets.push(subset)
+    end
+    all_subsets
+  end
 
   def self.track(array, p, i, j, set = [])
 
