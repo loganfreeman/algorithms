@@ -71,23 +71,20 @@ module Hacker
       set
   end
   
-  def can_subset_sum(array, sum)
+  def self.can_subset_sum(array, sum)
       rows = sum + 1
       n = array.length
       pre = Array.new(rows)
-      (1..rows).each { |i| pre[i-1] = false }
+      (1..rows).each { |i| pre[i - 1] = false }
       pre[0] = true
       (1..n).each do |j|
           current = Array.new(rows)
           current[0] = true
           (1..sum).each do |i|
               current[i] = pre[i]
-              if i - array[j-1] >= 0
-                  current[i] = pre[i] || pre[i - array[j-1]]
-              end
+              current[i] = pre[i] || pre[i - array[j - 1]] if i - array[j - 1] >= 0
           end
           pre = current
-  
       end
       pre[sum]
   end
