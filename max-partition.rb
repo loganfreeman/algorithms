@@ -26,6 +26,52 @@ def track(array, p, i, j, set = [])
     end
     set
 end
+def find_partition_efficient(array)
+    n = array.length
+    if n <= 1
+        return [false, nil]
+    end
+    k = array.reduce(:+)
+    if k % 2 == 1
+        return [false, nil]
+    end
+    rows = k/2 + 1
+    pre = Array.new(rows)
+    subset = []
+    (1..rows).each { |i| pre[i-1] = false }
+    pre[0] = true
+    (1..n).each do |j|
+        current = Array.new(rows)
+        (1..(k/2)).each do |i|
+            current[i] = pre[i]
+            if i - array[j-1] >= 0
+                current[i] = pre[i] || pre[i - array[j-1]]
+                subset.push(j-1)
+            end
+        end
+        pre = current
+        
+    end
+    can_partition = pre[(k/2)]
+    parts = []
+    if can_partition
+        left = []
+        right = []
+        parts.push(left)
+        parts.push(right)
+        array.each_with_index do |item, index|
+            if subset.include? index
+                left.push(item)
+            else
+                right.push(item)
+            end
+        end
+    end
+    parts.each do |p|
+        #puts p.join(' ')
+    end
+    [can_partition , parts]
+end
 def find_partition(array)
     n = array.length
     if n <= 1
