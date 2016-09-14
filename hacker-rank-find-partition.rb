@@ -167,27 +167,23 @@ module Hacker
 
   end
   
-  def self.max_partition_efficient(array)
-    n = array.length
-    array = array.reject { |i| i == 0 }
-    if array.empty?
-        return n - 1
+    def self.max_partition_efficient(array)
+        n = array.length
+        array = array.reject { |i| i == 0 }
+        return n - 1 if array.empty?
+        total = array.reduce(:+)
+        return 0 if total.odd?
+        can = can_subset_sum(array, total /= 2)
+        count = 0
+        while can
+            count += 1
+            can = if total.even?
+                      can_subset_sum(array, total /= 2)
+                  else
+                      false
+                  end
+        end
+        count
     end
-    total = array.reduce(:+)
-    if total % 2 == 1
-      return 0
-    end
-    can = can_subset_sum(array, total = total / 2)
-    count = 0
-    while can
-      count += 1
-      if total % 2 == 0
-        can = can_subset_sum(array, total = total / 2)
-      else
-        can = false
-      end
-    end
-    count
-  end
 
 end
