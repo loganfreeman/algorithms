@@ -136,22 +136,15 @@ end
 def max_partition_efficient(array)
     n = array.length
     array = array.reject { |i| i == 0 }
-    if array.empty?
-        return n - 1
-    end
+    return n - 1 if array.empty?
     total = array.reduce(:+)
-    if total % 2 == 1
-        return 0
-    end
-    can = can_subset_sum(array, total = total / 2)
+    return 0 if total.odd?
+    pre = can_subset_sum(array, total /= 2)
     count = 0
-    while can
+    while pre[total]
         count += 1
-        if total % 2 == 0
-            can = can_subset_sum(array, total = total / 2)
-        else
-            can = false
-        end
+        total /= 2
+        break if total.odd?
     end
     count
 end
@@ -163,14 +156,7 @@ def process
     if total.odd?
         pp 0
     else
-        pre = can_subset_sum(array, total /= 2)
-        count = 0
-        while pre[total]
-            count += 1
-            break if total.odd?
-            total /= 2
-        end
-        pp count
+        pp max_partition_efficient(array)
     end
     
 end
