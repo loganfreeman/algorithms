@@ -177,8 +177,8 @@ module Hacker
         count = 0
         while pre[total]
             count += 1
-            break if total.odd?
             total /= 2
+            break if total.odd?
         end
         count
     end
