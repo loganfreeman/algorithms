@@ -70,10 +70,22 @@ def solve(m, array)
     end
     puts max
 end
+def solve_smart(m, array)
+    array = array.sort 
+    max = 0
+    len = array.length
+    (1..len).each do |i|
+        s = 1 + i
+        p = array[i..-1].reduce(0, :+)*s
+        max = [p, max].max
+    end
+    puts max
+end
+
 def read
     m = gets.strip.to_i 
     array = gets.strip.split(' ').map(&:to_i)
-    solve(m, array)
+    solve_smart(m, array)
 end
 (1..n).each do |i|
     read
