@@ -1,17 +1,17 @@
-module HackerRank
-  
-  
+module Hacker
+
+
   # Return the sum of the values.
   def self.sum(values)
     values.inject(0){|x,y| x+=y}
   end
-  
+
   # Return first subset of values that sum to want, using the meet in the
   # middle algorithm (O(n * 2^(n/2)).
   def self.subset_sum(values, want, max_seconds=nil)
     raise(TypeError, "values must be an array of Integers") unless values.is_a?(Array)
     raise(TypeError, "want must be an Integer") unless want.is_a?(Integer)
-    
+
     # Optimization by removing 0 values and doing some simple checks
     values = values.reject{|x| x == 0}
     values.each{|value| return [value] if value == want}
@@ -20,7 +20,7 @@ module HackerRank
     sp, sn = sum(pos), sum(neg)
     return pos if sp == want
     return neg if sn == want
-    
+
     # Use the C version if it exists and all values will be inside the machine
     # limits
     return _subset_sum(values, want, max_seconds.to_i) if \
@@ -28,7 +28,7 @@ module HackerRank
       sum(pos).is_a?(Fixnum) and sum(neg).is_a?(Fixnum) and \
       max_seconds.to_i.is_a?(Fixnum)
 
-    # The pure ruby version 
+    # The pure ruby version
     sums = {}
     start_time = Time.now if max_seconds
     l = values.length/2
@@ -44,13 +44,13 @@ module HackerRank
     end
     nil
   end
-  
+
   # Yield all subsets of the array to the block.
   def self.subsets(array, skip = 0, &block)
     yield(array)
     (array.length-1).downto(skip){|i| subsets(array[0...i] + array[i+1..-1], i, &block)}
   end
-  
+
   def self.track(array, p, i, j, set = [])
 
 
@@ -118,6 +118,34 @@ module HackerRank
       else
           0
       end
+  end
+
+  def self.find_partition_efficient(array)
+      n = array.length
+      if n <= 1
+          return false
+      end
+      k = array.reduce(:+)
+      if k % 2 == 1
+          return false
+      end
+      rows = k/2 + 1
+      pre = Array.new(rows)
+      (1..rows).each { |i| pre[i-1] = false }
+      pre[0] = true
+      (1..n).each do |j|
+          current = Array.new(rows)
+          (1..(k/2)).each do |i|
+              current[i] = pre[i]
+              if i - array[j-1] >= 0
+                  current[i] = pre[i] || pre[i - array[j-1]]
+              end
+          end
+          pre = current
+
+      end
+      pre[(k/2)]
+
   end
 
 end
