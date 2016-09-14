@@ -86,7 +86,7 @@ module Hacker
           end
           pre = current
       end
-      pre[sum]
+      pre
   end
   
   def self.find_partition(array)
@@ -173,15 +173,12 @@ module Hacker
         return n - 1 if array.empty?
         total = array.reduce(:+)
         return 0 if total.odd?
-        can = can_subset_sum(array, total /= 2)
+        pre = can_subset_sum(array, total /= 2)
         count = 0
-        while can
+        while pre[total]
             count += 1
-            can = if total.even?
-                      can_subset_sum(array, total /= 2)
-                  else
-                      false
-                  end
+            break if total.odd?
+            total /= 2
         end
         count
     end
