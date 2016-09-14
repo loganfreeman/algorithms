@@ -168,6 +168,11 @@ module Hacker
   end
   
   def self.max_partition_efficient(array)
+    n = array.length
+    array = array.reject { |i| i == 0 }
+    if array.empty?
+        return n - 1
+    end
     total = array.reduce(:+)
     if total % 2 == 1
       return 0
