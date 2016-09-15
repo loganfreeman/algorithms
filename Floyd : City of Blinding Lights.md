@@ -205,7 +205,6 @@ class Graph
         @vertices = Hash.new { |h, k| h[k] = Vertex.new(k, Set.new, Float::INFINITY) }
         @edges = {}
         graph.each do |(v1, v2, dist)|
-            next if !@edges[[v1, v2]].nil? && @edges[[v1, v2]] < dist
             @vertices[v1].neighbours.add(v2)
             @edges[[v1, v2]] = dist
         end
@@ -217,7 +216,6 @@ class Graph
     end
 
     def dijkstra(source)
-        return if @dijkstra_source == source
         q = @vertices.values
 
         q.each do |vertex|
@@ -251,7 +249,6 @@ class Graph
             end
             visited.add(u.name)
         end
-        @dijkstra_source = source
     end
 
     def shortest_distance(target)
@@ -361,32 +358,57 @@ def dijkstra_read_graph(n_nodes, n_edges)
     g
 end
 
-N, M = gets.strip.split(' ').map(&:to_i)
-graph = dijkstra_read_graph(N, M)
-# pp graph.edges
-# pp graph.vertices
-n = gets.strip.to_i
-hash = Hash.new {|h, k| h[k] = []}
-queries = []
-answers = Hash.new {|h, k| h[k] = Hash.new }
-while n > 0
-    n -= 1
-    from, to = gets.strip.split(' ')
-    hash[from].push(to)
-    queries.push([from, to])
-end
-hash.keys.each do |from|
-    tos = hash[from]
-    graph.dijkstra(from)
-    tos.each do |to|
-        distance = graph.shortest_distance(to)
-        answers[from][to] = distance
+def solve_with_dijkstra(n_nodes, n_edges, n_queries, edges, queries)
+    g = Graph.new(edges.map { |from, to, weight| [from, to, weight.to_i]})
+    (1..n_nodes).each do |index|
+        g.add_vertex(index.to_s)
+    end
+    hash = Hash.new {|h, k| h[k] = []}
+    answers = Hash.new {|h, k| h[k] = Hash.new }
+    queries.each do |from, to|
+        hash[from].push(to)
+    end
+    hash.keys.each do |from|
+        tos = hash[from]
+        g.dijkstra(from)
+        tos.each do |to|
+            distance = g.shortest_distance(to)
+            answers[from][to] = distance
+        end
+    end
+
+    queries.each do |from, to|
+        distance = answers[from][to]
+        puts distance
     end
 end
 
-queries.each do |q|
-    distance = answers[q[0]][q[1]]
-    puts distance
+def solve_floyd(n_node, n_edges, n_queries, edges, queries)
 end
+
+def solve(n_node, n_edges, n_queries, edges, queries)
+    solve_with_dijkstra(n_node, n_edges, n_queries, edges, queries)
+end
+
+def read 
+    edges = []
+    queries = []
+    n_node, n_edges = gets.strip.split(' ').map(&:to_i)
+    i = 1
+    while i <= n_edges
+        edges.push(gets.gsub(/\s+/m, ' ').strip.split(' '))
+        i += 1
+    end
+    n_queries = gets.strip.to_i
+    i = 1
+    while i <= n_queries
+        queries.push(gets.strip.split(' '))
+        i += 1
+    end
+    solve(n_node, n_edges, n_queries, edges, queries)
+end
+
+
+read
 
 ```
