@@ -511,6 +511,78 @@ class RubyPriorityQueue
   end
 end
 
+
+class Graph
+    Vertex = Struct.new(:name, :neighbours, :dist, :prev)
+
+    attr_accessor :edges, :vertices, :n_nodes
+
+    def initialize(n_nodes, graph)
+        @n_nodes = n_nodes
+        @vertices = Hash.new { |h, k| h[k] = Vertex.new(k, Set.new, Float::INFINITY) }
+        @edges = {}
+        graph.each do |(v1, v2, dist)|
+            @vertices[v1].neighbours.add(v2)
+            @edges[[v1, v2]] = dist
+        end
+        @dijkstra_source = nil
+    end
+
+    def add_vertex(vertex)
+        @vertices[vertex]
+    end
+
+    def dijkstra(source)
+        visited = Set.new
+
+        queue = RubyPriorityQueue.new
+
+        @vertices[source].dist = 0
+
+
+        (1..n_nodes).each do |i|
+            vertex = @vertices[i.to_s]
+
+            if !(source == i.to_s)
+                vertex.dist = Float::INFINITY
+                vertex.prev = nil
+            end
+
+            queue.push vertex.name, vertex.dist
+        end
+
+
+
+        until queue.empty?
+            key, priority = queue.delete_min
+            u = @vertices[key]
+            break if u.dist == Float::INFINITY
+            u.neighbours.each do |v|
+                vv = @vertices[v]
+                next if visited.include?(vv.name)
+                alt = u.dist + @edges[[u.name, v]]
+                if alt < vv.dist
+                    vv.dist = alt
+                    vv.prev = u.name
+                    queue.change_priority vv.name, vv.dist
+                end
+            end
+            visited.add(u.name)
+        end
+    end
+
+    def shortest_distance(target)
+        return -1 if @vertices[target].dist == Float::INFINITY
+        @vertices[target].dist
+    end
+
+    def to_s
+        '#<%s vertices=%p edges=%p>' % [self.class.name, @vertices.values, @edges]
+    end
+end
+
+### Graph ####
+
 if __FILE__ == $0
   q = RubyPriorityQueue.new
 
