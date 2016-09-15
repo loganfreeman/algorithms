@@ -198,7 +198,7 @@ end
 
 class Graph
     Vertex = Struct.new(:name, :neighbours, :dist, :prev)
-    
+
     attr_accessor :edges, :vertices
 
     def initialize(graph)
@@ -211,30 +211,30 @@ class Graph
         end
         @dijkstra_source = nil
     end
-    
+
     def add_vertex(vertex)
         @vertices[vertex]
     end
-    
+
     def dijkstra(source)
         return if @dijkstra_source == source
         q = @vertices.values
-        
+
         q.each do |vertex|
             vertex.dist = Float::INFINITY
             vertex.prev = nil
         end
 
         @vertices[source].dist = 0
-        
+
         visited = Set.new
-        
+
         queue = MinPriorityQueue.new
-        
+
         q.each do |v|
             queue.push v.name, v.dist
         end
-        
+
         until queue.empty?
             u = @vertices[queue.min]
             break if u.dist == Float::INFINITY
@@ -255,6 +255,7 @@ class Graph
     end
 
     def shortest_distance(target)
+        return -1 if @vertices[target].dist == Float::INFINITY
         @vertices[target].dist
     end
 
@@ -365,10 +366,27 @@ graph = dijkstra_read_graph(N, M)
 # pp graph.edges
 # pp graph.vertices
 n = gets.strip.to_i
+hash = Hash.new {|h, k| h[k] = []}
+queries = []
+answers = Hash.new {|h, k| h[k] = Hash.new }
 while n > 0
     n -= 1
     from, to = gets.strip.split(' ')
-    graph.dijkstra(from)
-    puts graph.shortest_distance(to)
+    hash[from].push(to)
+    queries.push([from, to])
 end
+hash.keys.each do |from|
+    tos = hash[from]
+    graph.dijkstra(from)
+    tos.each do |to|
+        distance = graph.shortest_distance(to)
+        answers[from][to] = distance
+    end
+end
+
+queries.each do |q|
+    distance = answers[q[0]][q[1]]
+    puts distance
+end
+
 ```
