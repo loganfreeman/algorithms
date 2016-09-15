@@ -324,40 +324,6 @@ class Floyd
     end
 end
 
-def floyd_read_graph(n_nodes, n_edges)
-    graph = Array.new(n_nodes) { Array.new(n_nodes) { 'Ø' } }
-    while n_edges > 0
-        line = gets.gsub(/\s+/m, ' ').strip.split(' ')
-        if graph[line[0].to_i - 1][line[1].to_i - 1] == 'Ø'
-            graph[line[0].to_i - 1][line[1].to_i - 1] = line[2].to_i
-        end
-
-        if graph[line[0].to_i - 1][line[1].to_i - 1] > line[2].to_i
-            graph[line[0].to_i - 1][line[1].to_i - 1] = line[2].to_i
-        end
-        n_edges -= 1
-    end
-    objet = Floyd.new(graph)
-    objet.traitement
-    # objet.output
-    objet
-end
-
-
-def dijkstra_read_graph(n_nodes, n_edges)
-    graph = []
-    while n_edges > 0
-        line = gets.gsub(/\s+/m, ' ').strip.split(' ')
-        graph.push([line[0], line[1], line[2].to_i])
-        n_edges -= 1
-    end
-    g = Graph.new(graph)
-    (1..n_nodes).each do |index|
-        g.add_vertex(index.to_s)
-    end
-    g
-end
-
 def solve_with_dijkstra(n_nodes, n_edges, n_queries, edges, queries)
     g = Graph.new(edges.map { |from, to, weight| [from, to, weight.to_i]})
     (1..n_nodes).each do |index|
@@ -383,11 +349,28 @@ def solve_with_dijkstra(n_nodes, n_edges, n_queries, edges, queries)
     end
 end
 
-def solve_floyd(n_node, n_edges, n_queries, edges, queries)
+def solve_floyd(n_nodes, n_edges, n_queries, edges, queries)
+    graph = Array.new(n_nodes) { Array.new(n_nodes) { 'Ø' } }
+    while !edges.empty?
+        line = edges.shift
+        graph[line[0].to_i - 1][line[1].to_i - 1] = line[2].to_i
+    end
+    graph = Floyd.new(graph)
+    graph.traitement
+    #objet.output
+    while !queries.empty?
+        from, to = queries.shift.map(&:to_i)
+        puts graph.distance(from, to)
+    end
 end
 
-def solve(n_node, n_edges, n_queries, edges, queries)
-    solve_with_dijkstra(n_node, n_edges, n_queries, edges, queries)
+def solve(n_nodes, n_edges, n_queries, edges, queries)
+    if queries.length > (n_nodes**2)*0.5
+       solve_floyd(n_nodes, n_edges, n_queries, edges, queries) 
+    else
+       solve_with_dijkstra(n_nodes, n_edges, n_queries, edges, queries)
+    end
+    
 end
 
 def read 
