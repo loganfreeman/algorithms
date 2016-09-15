@@ -199,9 +199,10 @@ end
 class Graph
     Vertex = Struct.new(:name, :neighbours, :dist, :prev)
 
-    attr_accessor :edges, :vertices
+    attr_accessor :edges, :vertices, :n_nodes
 
-    def initialize(graph)
+    def initialize(n_nodes, graph)
+        @n_nodes = n_nodes
         @vertices = Hash.new { |h, k| h[k] = Vertex.new(k, Set.new, Float::INFINITY) }
         @edges = {}
         graph.each do |(v1, v2, dist)|
@@ -216,22 +217,25 @@ class Graph
     end
 
     def dijkstra(source)
-        q = @vertices.values
-
-        q.each do |vertex|
-            vertex.dist = Float::INFINITY
-            vertex.prev = nil
-        end
-
-        @vertices[source].dist = 0
-
         visited = Set.new
 
         queue = MinPriorityQueue.new
 
-        q.each do |v|
-            queue.push v.name, v.dist
+        @vertices[source].dist = 0
+
+
+        (1..n_nodes).each do |i|
+            vertex = @vertices[i.to_s]
+
+            if !(source == i.to_s)
+                vertex.dist = Float::INFINITY
+                vertex.prev = nil
+            end
+
+            queue.push vertex.name, vertex.dist
         end
+
+
 
         until queue.empty?
             u = @vertices[queue.min]
@@ -325,10 +329,8 @@ class Floyd
 end
 
 def solve_with_dijkstra(n_nodes, n_edges, n_queries, edges, queries)
-    g = Graph.new(edges.map { |from, to, weight| [from, to, weight.to_i]})
-    (1..n_nodes).each do |index|
-        g.add_vertex(index.to_s)
-    end
+    g = Graph.new(n_nodes, edges.map { |from, to, weight| [from, to, weight.to_i]})
+
     hash = Hash.new {|h, k| h[k] = []}
     answers = Hash.new {|h, k| h[k] = Hash.new }
     queries.each do |from, to|
@@ -370,7 +372,7 @@ def solve(n_nodes, n_edges, n_queries, edges, queries)
     else
        solve_with_dijkstra(n_nodes, n_edges, n_queries, edges, queries)
     end
-    
+
 end
 
 def read 
@@ -393,5 +395,4 @@ end
 
 
 read
-
 ```
