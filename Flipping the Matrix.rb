@@ -21,18 +21,28 @@ def display(grid)
     end
 end
 
-def swap(grid, i, j)
-    grid[i][j], grid[i][j+1] = grid[i][j+1], grid[i][j]
-end
-
-def check_column(grid, col, size)
-    sorted = true
-    1.upto(size-1).each do |r|
-        if grid[r-1][col] > grid[r][col]
-            sorted = false
+def get_max(grid, size)
+    count = 0
+    1.upto(size).each do |r|
+        1.upto(size).each do |c|
+            count += grid[r-1][c-1]
         end
     end
-    sorted
+    count
+end
+
+def reverse_row(grid, row)
+    grid[row].reverse!
+end
+
+def reverse_col(grid, col)
+    reversed = 1.upto(grid.length).map do |r|
+        grid[r-1][col]
+    end.reverse!
+    reversed.each_with_index do |v, r|
+        grid[r][col] = v
+    end
+    grid
 end
 
 def solve(grid, size)
