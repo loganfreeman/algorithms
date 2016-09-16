@@ -10,7 +10,7 @@ def read
                 grid[i-1][j] = c
             end
         end
-        display(grid)
+        solve(grid, size)
     end
 end
 
@@ -31,14 +31,21 @@ def get_max(grid, size)
     count
 end
 
+def need_reverse(array)
+    array[0, array.length/2].reduce(:+) > array[array.length/2, array.length/2].reduce(:+)
+end
+
 def reverse_row(grid, row)
+    return if !need_reverse(grid[row])
     grid[row].reverse!
 end
 
 def reverse_col(grid, col)
-    reversed = 1.upto(grid.length).map do |r|
+    array = 1.upto(grid.length).map do |r|
         grid[r-1][col]
-    end.reverse!
+    end
+    return if !need_reverse(array)
+    reversed = array.reverse!
     reversed.each_with_index do |v, r|
         grid[r][col] = v
     end
@@ -46,19 +53,14 @@ def reverse_col(grid, col)
 end
 
 def solve(grid, size)
-    1.upto(size).each do |r|
-        row = grid[r-1]
-        row.sort!
+    1.upto(size).each do |i|
+        reverse_col(grid, i-1)
     end
-    # display(grid)
-    first = (1..size).find do |col|
-        !check_column(grid, col-1, size)
+    
+    1.upto(size).each do |i|
+        reverse_row(grid, i-1)
     end
-    if !first.nil?
-        puts 'NO'
-    else
-        puts 'YES'
-    end
+    puts get_max(grid, size/2)
 end
 
 read
