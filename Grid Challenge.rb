@@ -19,6 +19,11 @@ def display(grid)
         puts row.join('')
     end
 end
+
+def swap(grid, i, j)
+    grid[i][j], grid[i][j+1] = grid[i][j+1], grid[i][j]
+end
+
 def solve(grid, size)
     display(grid)
 end
