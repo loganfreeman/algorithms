@@ -23,16 +23,22 @@ end
 
 def get_max(grid, size)
     count = 0
-    1.upto(size).each do |r|
-        1.upto(size).each do |c|
-            count += grid[r-1][c-1]
+    half = size/2
+    1.upto(half).each do |r|
+        1.upto(half).each do |c|
+            top = [r-1, c-1]
+            right = [r-1, size - c]
+            left = [size - r, c-1]
+            bottom = [size -r, size -c]
+            max = [top, right, left, bottom].map { |r, c| grid[r][c] }.max 
+            count += max
         end
     end
     count
 end
 
 def need_reverse(array)
-    array[0, array.length/2].reduce(:+) > array[array.length/2, array.length/2].reduce(:+)
+    array[0, array.length/2].reduce(:+) < array[array.length/2, array.length/2].reduce(:+)
 end
 
 def reverse_row(grid, row)
@@ -52,15 +58,11 @@ def reverse_col(grid, col)
     grid
 end
 
+
+
 def solve(grid, size)
-    1.upto(size).each do |i|
-        reverse_col(grid, i-1)
-    end
-    
-    1.upto(size).each do |i|
-        reverse_row(grid, i-1)
-    end
-    puts get_max(grid, size/2)
+
+    puts get_max(grid, size)
 end
 
 read
