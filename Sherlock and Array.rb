@@ -1,22 +1,35 @@
 # Enter your code here. Read input from STDIN. Print output to STDOUT
 n = gets.strip.to_i
 def solve(array)
-    if array.length < 3
-        return 'NO'
+    if array.length == 1
+        puts 'YES'
+        return
     end
+    
+    if array.length == 2
+        puts 'NO'
+        return
+    end
+
+    
     left = array.shift
     right = array.pop
-    while array.length >= 1
-        diff = (left-right).abs
-        if left > right 
-            right = array.pop
-            
-        elsif right > left
-            left = array.shift
-        else
-            left = array.shift
-            right = array.pop
-        end
+    
+    while !array.empty?
+
+        diff = (left - right).abs
+        
+        array.unshift(diff) if left > right
+        array.push(diff) if right > left
+
+        break if array.length < 3
+        left = array.shift
+        right = array.pop
+    end
+    if array.length == 1
+        puts 'YES'
+    else
+        puts 'NO'
     end
     
 end
