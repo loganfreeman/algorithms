@@ -1,4 +1,19 @@
 module Hacker
+    def self.insertion_sort(array)
+      1.upto(array.length - 1) do |i|
+        x = array[i]
+          j = i - 1
+          while j >= 0 && array[j] > x
+
+              array[j+1] = array[j]
+
+              j -= 1
+          end
+          array[j+1] = x
+      end
+
+      array
+    end
     def self.insertionSort(array)
         1.upto(array.length - 1) do |i|
             j = i
