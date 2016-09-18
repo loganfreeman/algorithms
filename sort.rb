@@ -1,5 +1,19 @@
 module Hacker
     
+    def self.counting_sort(array)
+      min = array.min
+      max = array.max
+     
+      # make an array of each value, with the number of times it occurs.
+      # subtract min, to normalize as well as to allow for negative numbers.
+      counts = Array.new(max-min+1, 0);
+      array.each { |n| counts[n-min] += 1 }
+     
+      # make a new sorted array, repeating values per counts array
+      # return new array implicitly
+      (0...counts.size).map { |i| [i + min] * counts[i] }.flatten
+    end
+    
     def self.quicksort_in_place arr, start, nd
         if nd - start <= 0
             return arr
