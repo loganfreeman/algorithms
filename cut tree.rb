@@ -15,6 +15,10 @@ class Node
 end
 
 class Graph
+    
+    def initialize 
+        @visited = {}
+    end
     # We are dealing with an undirected graph,
     # so I increment the "adjacents" in both sides.
     # The depth first will work the same way with
@@ -23,6 +27,39 @@ class Graph
         node_a.adjacents << node_b
         node_b.adjacents << node_a
     end
+    
+    def breadth_first_traverse(node)
+        queue = []
+        visited = {}
+        queue.push(node)
+        while !queue.empty?
+            node = queue.shift 
+            yield node 
+            node.adjacents.each do |child|
+                next if visited[child]
+                queue.push(child)
+            end
+            
+            visited[node] = true
+        end
+    end
+    
+    def depth_first_traverse(node)
+        queue = []
+        visited = {}
+        queue.push(node)
+        while !queue.empty?
+            node = queue.pop 
+            yield node 
+            node.adjacents.each do |child|
+                next if visited[child]
+                queue.push(child)
+            end
+            
+            visited[node] = true
+        end
+    end
+   
 end
 
 class DepthFirstSearch
@@ -34,7 +71,7 @@ class DepthFirstSearch
 
         dfs(source_node)
     end
-
+    
     # After the depth-first search is done we can find
     # any vertice connected to "node" in constant time [O(1)]
     # and find a path to this node in linear time [O(n)].
@@ -82,5 +119,7 @@ graph = Graph.new
     graph.add_edge(from, to)
 end
 
-search = DepthFirstSearch.new(graph, nodes[1])
-
+root = nodes[1]
+graph.depth_first_traverse(root) do |node| 
+    puts node.to_s
+end
