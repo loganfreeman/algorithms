@@ -16,6 +16,12 @@ module AStar
 
             @hash = [@x, @y].hash # create a hash value used when storing the node as a hash key.
         end
+        
+        def adjacent
+            edges.each do |edge| 
+                yield(edge.child) if edge.child.enabled
+            end
+        end
 
         def ==(other)
             @hash == other.hash
@@ -94,6 +100,23 @@ module AStar
                 puts line, separator
             end
         end
+        
+        def direction_changes(pv)
+            changes = 0
+            hash = pv.inject({}) { |hsh, node| hsh[node] = true; hsh }
+            0.upto(pv.length - 2).each do |i| 
+                current = pv[i]
+                rest = []
+                current.adjacent do |node|
+                    rest.push(node) if !hash[node] && node.enabled
+                end
+                if rest.count > 0
+                    changes += 1 
+                    #puts current.inspect
+                end
+            end
+            changes
+        end
 
         private
 
@@ -101,7 +124,7 @@ module AStar
             each do |node| # along with a movement cost representing the distance between the nodes.
                 (-1..1).each do |y_offset|
                     (-1..1).each do |x_offset|
-                        next if x_offset.abs + y_offset.abs == 2 # no diagonal walk
+                        next if x_offset.abs + y_offset.abs == 2
                         y = node.y + y_offset
                         x = node.x + x_offset
                         if 0 <= x && x < @width && 0 <= y && y < @height && (x_offset != 0 || y_offset != 0)
@@ -191,7 +214,14 @@ def read_graph
     start = graph[start[0], start[1]]
     goal = graph[goal[0], goal[1]]
     pv = AStar::search(start, goal)
-    graph.print(start, goal, pv)
+    #graph.print(start, goal, pv)
+    pv.unshift(start)
+    actual = graph.direction_changes(pv)
+    if actual == steps
+        puts 'Impressed'
+    else
+        puts 'Oops!'
+    end
 end
 while n > 0
     n -= 1
