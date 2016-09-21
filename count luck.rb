@@ -66,7 +66,7 @@ module AStar
             @nodes[y][x].enabled = true
         end
 
-        GRAPHICS = { open: "\u00B7", blocked: "\u25a0", start: "\u0391", goal: "\u03A9", pv: "\u0298" }.freeze
+        GRAPHICS = { open: ".", blocked: "X", start: "M", goal: "*", pv: "\u0298" }.freeze
 
         def print(start = nil, goal = nil, pv = nil) # Prints out the graph along with the path taken from the
             if pv.nil? || pv.empty? # start node to the goal, if given.
@@ -77,7 +77,7 @@ module AStar
                 pv = pv.inject({}) { |hsh, node| hsh[node] = true; hsh }
             end
             puts separator = '|--' + '-' * (4 * @width - 3) + '--|'
-            @nodes.reverse.each do |row|
+            @nodes.each do |row|
                 line = '|  ' + row.map do |node|
                     if !node.enabled
                         GRAPHICS[:blocked]
