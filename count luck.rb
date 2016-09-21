@@ -101,6 +101,7 @@ module AStar
             each do |node| # along with a movement cost representing the distance between the nodes.
                 (-1..1).each do |y_offset|
                     (-1..1).each do |x_offset|
+                        next if x_offset.abs + y_offset.abs == 2 # no diagonal walk
                         y = node.y + y_offset
                         x = node.x + x_offset
                         if 0 <= x && x < @width && 0 <= y && y < @height && (x_offset != 0 || y_offset != 0)
