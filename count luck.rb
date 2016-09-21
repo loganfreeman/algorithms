@@ -35,7 +35,7 @@ module AStar
     end
 
     class CartesianGraph # Creates an interconnected Cartesian graph of (width)**2 nodes.
-        def initialize(width, height) # Each node is linked to all adjacent nodes at initialization.
+        def initialize(height, width) # Each node is linked to all adjacent nodes at initialization.
             @width = width
             @height = height
             @nodes = Array.new(height) { |y| Array.new(width) { |x| CartesianNode.new(x, y) } }
@@ -103,7 +103,7 @@ module AStar
                     (-1..1).each do |x_offset|
                         y = node.y + y_offset
                         x = node.x + x_offset
-                        if 0 <= x && x < @width && 0 <= y && y < @width && (x_offset != 0 || y_offset != 0)
+                        if 0 <= x && x < @width && 0 <= y && y < @height && (x_offset != 0 || y_offset != 0)
                             other = @nodes[y][x]
                             node.edges << Edge.new(AStar.distance(node, other), other)
                         end
@@ -170,18 +170,18 @@ end
 
 n = gets.strip.to_i
 def read_graph
-    rows, columns = gets.strip.split(/\s/).map(&:to_i)
-    graph = AStar::CartesianGraph.new(rows, columns)
+    height, width = gets.strip.split(/\s/).map(&:to_i)
+    graph = AStar::CartesianGraph.new(height, width)
     goal = start = steps = nil
-    0.upto(rows-1).each do |r| 
+    0.upto(height-1).each do |r| 
         row = gets.strip.split('')
         row.each_with_index do |v, c| 
             if v == 'X'
-                graph.disable(r, c)
+                graph.disable(c, r)
             elsif v == '*'
-                goal = [r, c]
+                goal = [c, r]
             elsif v == 'M'
-                start = [r, c]
+                start = [c, r]
             end
             
         end
@@ -196,3 +196,6 @@ while n > 0
     n -= 1
     read_graph
 end
+
+
+
