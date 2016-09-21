@@ -107,8 +107,19 @@ end
 
 root = nodes[1]
 
-total = Total.new(graph, root)
-total.run
+nodes = []
+graph.breadth_first_traverse(root) do |node| 
+    nodes.push(node)
+end
+
+visited = {}
+
+while !nodes.empty? 
+    node = nodes.pop 
+    visited[node] = true
+    visited_children = node.adjacents.select { |child| visited[child] }
+    node.total = node.value + visited_children.inject(0) { |total, node| total += node.total }
+end
 
 
 min = Float::INFINITY
