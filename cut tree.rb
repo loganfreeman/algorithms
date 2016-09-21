@@ -110,6 +110,19 @@ root = nodes[1]
 total = Total.new(graph, root)
 total.run
 
+
+min = Float::INFINITY
+total = root.total
+min_node = nil
 graph.breadth_first_traverse(root) do |node| 
-    puts node.to_s
+    next if node == root 
+    #puts node.to_s
+    remaining = total - node.total 
+    diff = (remaining - node.total).abs 
+    if diff < min 
+        min = diff 
+        min_node = node
+    end
 end
+
+puts min
